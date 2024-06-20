@@ -1,5 +1,6 @@
 package com.teamsparta.assignment.domain.user.service
 
+import com.teamsparta.assignment.domain.exception.NicknameDuplicateException
 import com.teamsparta.assignment.domain.user.dto.MemberResponse
 import com.teamsparta.assignment.domain.user.dto.MemberSignupRequest
 import com.teamsparta.assignment.domain.user.model.Member
@@ -16,7 +17,7 @@ class MemberService (
     @Transactional
     fun signUp(request: MemberSignupRequest): MemberResponse {
         if (memberRepository.existsByNickname(request.nickname)) {
-            throw RuntimeException("중복된 닉네임입니다.")
+            throw NicknameDuplicateException()
         }
         val member = Member(nickname = request.nickname, password = request.password)
 
