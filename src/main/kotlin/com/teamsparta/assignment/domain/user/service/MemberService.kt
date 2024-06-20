@@ -23,11 +23,11 @@ class MemberService (
 
 
         if(request.password != request.passwordConfirmation) {
-            throw PasswordMismatchException()
+            throw PasswordValidationException.PasswordMismatchException()
         }
 
         if (memberRepository.existsByNickname(request.nickname)) {
-            throw NicknameDuplicateException()
+            throw NicknameValidationException.NicknameDuplicateException()
         }
         val member = Member(nickname = request.nickname, password = request.password)
 
@@ -45,7 +45,7 @@ class MemberService (
             // `^` 문자열 시작, `[a-zA-Z0-9]` 알파벳 대소문자, 숫자 중 하나를 의미함, `3,` 최소 3자 이상, `$` 문자열 끝맺음
             )
         ) {
-            throw NicknameInvalidException()
+            throw NicknameValidationException.NicknameInvalidException()
         }
     }
 
@@ -59,11 +59,11 @@ class MemberService (
             // `^` 문자열 시작, `.{4,16}` 최소 4자 이상 ~ 16자 이하, `$` 문자열 끝맺음
         )
         ) {
-            throw PasswordLengthException()
+            throw PasswordValidationException.PasswordLengthException()
         }
         if (password.contains(nickname)) {
 
-            throw PasswordContainsNicknameException()
+            throw PasswordValidationException.PasswordContainsNicknameException()
         }
 
     }
