@@ -1,6 +1,7 @@
 package com.teamsparta.assignment.domain.user.service
 
 import com.teamsparta.assignment.domain.exception.NicknameDuplicateException
+import com.teamsparta.assignment.domain.exception.PasswordMismatchException
 import com.teamsparta.assignment.domain.user.dto.MemberResponse
 import com.teamsparta.assignment.domain.user.dto.MemberSignupRequest
 import com.teamsparta.assignment.domain.user.model.Member
@@ -16,6 +17,10 @@ class MemberService (
 
     @Transactional
     fun signUp(request: MemberSignupRequest): MemberResponse {
+        if(request.password != request.passwordConfirmation) {
+            throw PasswordMismatchException()
+        }
+
         if (memberRepository.existsByNickname(request.nickname)) {
             throw NicknameDuplicateException()
         }
