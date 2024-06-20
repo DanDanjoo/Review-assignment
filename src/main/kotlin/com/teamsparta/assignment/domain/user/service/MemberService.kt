@@ -1,8 +1,6 @@
 package com.teamsparta.assignment.domain.user.service
 
-import com.teamsparta.assignment.domain.exception.NicknameDuplicateException
-import com.teamsparta.assignment.domain.exception.NicknameInvalidException
-import com.teamsparta.assignment.domain.exception.PasswordMismatchException
+import com.teamsparta.assignment.domain.exception.*
 import com.teamsparta.assignment.domain.user.dto.MemberResponse
 import com.teamsparta.assignment.domain.user.dto.MemberSignupRequest
 import com.teamsparta.assignment.domain.user.model.Member
@@ -21,6 +19,7 @@ class MemberService (
     fun signUp(request: MemberSignupRequest): MemberResponse {
         val (nickname, password) = request
         validateNickname(nickname)
+        validatePassword(password, nickname)
 
 
         if(request.password != request.passwordConfirmation) {
@@ -52,5 +51,19 @@ class MemberService (
 
     }
 
-    private fun validatePassword(password: String) {
+    private fun validatePassword(password: String, nickname: String) {
+
+        if (!Pattern.matches(
+                "^.{4,16}$",
+                password
+            // `^` 문자열 시작, `.{4,16}` 최소 4자 이상 ~ 16자 이하, `$` 문자열 끝맺음
+        )
+        ) {
+            throw PasswordLengthException()
+        }
+        if (password.contains(nickname)) {
+
+            throw PasswordContainsNicknameException()
+        }
+
     }

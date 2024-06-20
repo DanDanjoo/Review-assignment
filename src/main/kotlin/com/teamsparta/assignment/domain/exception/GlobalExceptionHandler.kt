@@ -25,4 +25,14 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
     }
 
+    @ExceptionHandler(PasswordLengthException::class)
+    fun handlePasswordLengthException(ex: PasswordLengthException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
+    }
+
+    @ExceptionHandler(PasswordContainsNicknameException::class)
+    fun handlePasswordContainsNicknameException(ex: PasswordContainsNicknameException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
+    }
+
 }
