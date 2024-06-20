@@ -10,13 +10,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
-    @ExceptionHandler()
+    @ExceptionHandler(NicknameDuplicateException::class)
     fun handleNicknameDuplicateException(ex: NicknameDuplicateException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponse(message = ex.message))
     }
 
-    @ExceptionHandler()
+    @ExceptionHandler(NicknameInvalidException::class)
+    fun handleNicknameInvalidException(ex: NicknameInvalidException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
+    }
+
+    @ExceptionHandler(PasswordMismatchException::class)
     fun handlePasswordMismatchException(ex: PasswordMismatchException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
     }
+
 }
