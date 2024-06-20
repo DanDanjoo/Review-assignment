@@ -5,6 +5,7 @@ import com.teamsparta.assignment.domain.user.dto.MemberResponse
 import com.teamsparta.assignment.domain.user.dto.MemberSignupRequest
 import com.teamsparta.assignment.domain.user.model.Member
 import com.teamsparta.assignment.domain.user.repository.MemberRepository
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.regex.Pattern
@@ -12,7 +13,8 @@ import java.util.regex.Pattern
 
 @Service
 class MemberService (
-   private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val passwordEncoder: PasswordEncoder
 ) {
 
     @Transactional
@@ -29,7 +31,10 @@ class MemberService (
         if (memberRepository.existsByNickname(request.nickname)) {
             throw NicknameValidationException.NicknameDuplicateException()
         }
-        val member = Member(nickname = request.nickname, password = request.password)
+        val member = Member(
+            nickname = request.nickname,
+            password = passwordEncoder.encode(request.password)
+        )
 
         val saveMember = memberRepository.save(member)
 
