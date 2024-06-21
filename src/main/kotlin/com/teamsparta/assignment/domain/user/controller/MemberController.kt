@@ -23,8 +23,8 @@ class MemberController (
 
     @PostMapping("/login")
     fun logIn(@RequestBody request: MemberLoginRequest): ResponseEntity<MemberResponse> {
-        memberService.logIn(request)
-        return ResponseEntity.status(HttpStatus.OK).build()
+        val response = memberService.logIn(request)
+        return ResponseEntity.ok(response)
     }
 
 }
