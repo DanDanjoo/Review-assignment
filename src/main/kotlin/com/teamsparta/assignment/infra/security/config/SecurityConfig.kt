@@ -1,16 +1,20 @@
 package com.teamsparta.assignment.infra.security.config
 
+import com.teamsparta.assignment.infra.security.jwt.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+class SecurityConfig (
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter
+) {
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -26,6 +30,8 @@ class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/api/v1/members/login").permitAll() // 로그인 경로 모두 접근 허용
                     .anyRequest().authenticated()  // 그 외 모든 요청은 인증해야함
             }
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            // requestMatchers를 통해 인증, 허용된 URL 외 다른요청이 들어왔을 때 사용함
             .build()
     }
 }

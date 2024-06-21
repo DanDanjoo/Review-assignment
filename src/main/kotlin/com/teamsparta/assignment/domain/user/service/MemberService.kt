@@ -6,6 +6,7 @@ import com.teamsparta.assignment.domain.user.dto.MemberResponse
 import com.teamsparta.assignment.domain.user.dto.MemberSignupRequest
 import com.teamsparta.assignment.domain.user.model.Member
 import com.teamsparta.assignment.domain.user.repository.MemberRepository
+import com.teamsparta.assignment.infra.security.jwt.JwtPlugin
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -13,9 +14,10 @@ import java.util.regex.Pattern
 
 
 @Service
-class MemberService (
+class MemberService(
     private val memberRepository: MemberRepository,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val jwtPlugin: JwtPlugin
 ) {
 
     @Transactional
@@ -44,14 +46,20 @@ class MemberService (
 
     @Transactional
     fun logIn(request: MemberLoginRequest): MemberResponse {
-        val nicknameExists = memberRepository.existsByNickname(request.nickname)
-        val passwordExists = memberRepository.existsByPassword(request.password)
+        val member = memberRepository.findByNickname(request.nickname)
+            ?: throw LoginValidationException()
 
-        if (!nicknameExists || !passwordExists) {
+        if (member.nickname != request.nickname ||
+            !passwordEncoder.matches(request.password, member.password)){
             throw LoginValidationException()
         }
 
-        //TODO JWT
+        val token = jwtPlugin.generateAccessToken(
+            subject = member.id.toString(),
+            nickname = member.nickname
+        )
+
+        return MemberResponse.from(member, token)
     }
 }
 
