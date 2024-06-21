@@ -40,4 +40,9 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
     }
 
+    @ExceptionHandler(LoginValidationException::class)
+    fun handleLoginValidationException(ex: LoginValidationException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse(message = ex.message))
+    }
+
 }
