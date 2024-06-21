@@ -1,6 +1,7 @@
-package com.teamsparta.assignment.infra.security.config.jwt
+package com.teamsparta.assignment.infra.security.jwt
 
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.stereotype.Component
@@ -17,6 +18,13 @@ class JwtPlugin {
         const val ISSUER = "assignment"
         const val SECRET = "PO5o6c72FN672Fd31967VWbAWq4Ws5aZ"
         const val ACCESS_TOKEN_EXPIRATION_HOUR : Long = 168
+    }
+
+    fun validateToken(token: String): Result<Jws<Claims>>{
+        return kotlin.runCatching {
+            val key = Keys.hmacShaKeyFor(SECRET.toByteArray(StandardCharsets.UTF_8))
+            Jwts.parser().verifyWith(key).build().parseClaimsJws(token)
+        }
     }
 
 

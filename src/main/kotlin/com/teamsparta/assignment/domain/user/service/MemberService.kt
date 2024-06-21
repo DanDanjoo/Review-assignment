@@ -6,7 +6,7 @@ import com.teamsparta.assignment.domain.user.dto.MemberResponse
 import com.teamsparta.assignment.domain.user.dto.MemberSignupRequest
 import com.teamsparta.assignment.domain.user.model.Member
 import com.teamsparta.assignment.domain.user.repository.MemberRepository
-import com.teamsparta.assignment.infra.security.config.jwt.JwtPlugin
+import com.teamsparta.assignment.infra.security.jwt.JwtPlugin
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
