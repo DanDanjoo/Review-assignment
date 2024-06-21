@@ -40,6 +40,8 @@ class JwtAuthenticationFilter (
                     // 토큰 모아준다음 인증 객체 만든 후 ContextHolder에 끼워 맞춰주는 작업
                 }
         }
+        filterChain.doFilter(request, response)
+        // 여러개 필터가 연쇄적으로 요청을 처리하고, 각각의 필터는 자신의 역할을 수행한 후 다음 필터로 제어를 넘기는 구조
     }
     // 헤더에서 요청받은 값을 꺼낸 후 Bearer 글자 제거 후 순수 토큰 값만 받아올거임
     private fun HttpServletRequest.getBearerToken() : String? {
