@@ -1,6 +1,7 @@
 package com.teamsparta.assignment.domain.user.service
 
 import com.teamsparta.assignment.domain.exception.*
+import com.teamsparta.assignment.domain.user.dto.MemberLoginRequest
 import com.teamsparta.assignment.domain.user.dto.MemberResponse
 import com.teamsparta.assignment.domain.user.dto.MemberSignupRequest
 import com.teamsparta.assignment.domain.user.model.Member
@@ -24,7 +25,7 @@ class MemberService (
         validatePassword(password, nickname)
 
 
-        if(request.password != request.passwordConfirmation) {
+        if (request.password != request.passwordConfirmation) {
             throw PasswordValidationException.PasswordMismatchException()
         }
 
@@ -41,6 +42,19 @@ class MemberService (
         return MemberResponse.from(saveMember)
     }
 
+    @Transactional
+    fun logIn(request: MemberLoginRequest): MemberResponse {
+        val nicknameExists = memberRepository.existsByNickname(request.nickname)
+        val passwordExists = memberRepository.existsByPassword(request.password)
+
+        if (!nicknameExists || !passwordExists) {
+            throw LoginValidationException()
+        }
+
+        //TODO JWT
+    }
+}
+
 
     private fun validateNickname(nickname: String) {
 
@@ -52,8 +66,6 @@ class MemberService (
         ) {
             throw NicknameValidationException.NicknameInvalidException()
         }
-    }
-
     }
 
     private fun validatePassword(password: String, nickname: String) {

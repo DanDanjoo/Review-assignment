@@ -1,5 +1,6 @@
 package com.teamsparta.assignment.domain.user.controller
 
+import com.teamsparta.assignment.domain.user.dto.MemberLoginRequest
 import com.teamsparta.assignment.domain.user.dto.MemberResponse
 import com.teamsparta.assignment.domain.user.dto.MemberSignupRequest
 import com.teamsparta.assignment.domain.user.service.MemberService
@@ -19,4 +20,11 @@ class MemberController (
         memberService.signUp(request)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
+
+    @PostMapping("/login")
+    fun logIn(@RequestBody request: MemberLoginRequest): ResponseEntity<MemberResponse> {
+        memberService.logIn(request)
+        return ResponseEntity.status(HttpStatus.OK).build()
+    }
+
 }
