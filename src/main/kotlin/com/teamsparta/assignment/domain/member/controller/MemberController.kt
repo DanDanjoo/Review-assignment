@@ -1,9 +1,9 @@
-package com.teamsparta.assignment.domain.user.controller
+package com.teamsparta.assignment.domain.member.controller
 
-import com.teamsparta.assignment.domain.user.dto.MemberLoginRequest
-import com.teamsparta.assignment.domain.user.dto.MemberResponse
-import com.teamsparta.assignment.domain.user.dto.MemberSignupRequest
-import com.teamsparta.assignment.domain.user.service.MemberService
+import com.teamsparta.assignment.domain.member.dto.MemberLoginRequest
+import com.teamsparta.assignment.domain.member.dto.MemberResponse
+import com.teamsparta.assignment.domain.member.dto.MemberSignupRequest
+import com.teamsparta.assignment.domain.member.service.MemberService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

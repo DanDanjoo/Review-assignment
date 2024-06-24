@@ -1,11 +1,11 @@
-package com.teamsparta.assignment.domain.user.service
+package com.teamsparta.assignment.domain.member.service
 
 import com.teamsparta.assignment.domain.exception.*
-import com.teamsparta.assignment.domain.user.dto.MemberLoginRequest
-import com.teamsparta.assignment.domain.user.dto.MemberResponse
-import com.teamsparta.assignment.domain.user.dto.MemberSignupRequest
-import com.teamsparta.assignment.domain.user.model.Member
-import com.teamsparta.assignment.domain.user.repository.MemberRepository
+import com.teamsparta.assignment.domain.member.dto.MemberLoginRequest
+import com.teamsparta.assignment.domain.member.dto.MemberResponse
+import com.teamsparta.assignment.domain.member.dto.MemberSignupRequest
+import com.teamsparta.assignment.domain.member.model.Member
+import com.teamsparta.assignment.domain.member.repository.MemberRepository
 import com.teamsparta.assignment.infra.security.jwt.JwtPlugin
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service

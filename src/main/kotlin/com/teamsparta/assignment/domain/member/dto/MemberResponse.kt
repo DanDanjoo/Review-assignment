@@ -1,6 +1,6 @@
-package com.teamsparta.assignment.domain.user.dto
+package com.teamsparta.assignment.domain.member.dto
 
-import com.teamsparta.assignment.domain.user.model.Member
+import com.teamsparta.assignment.domain.member.model.Member
 
 data class MemberResponse (
     val id : Long?,

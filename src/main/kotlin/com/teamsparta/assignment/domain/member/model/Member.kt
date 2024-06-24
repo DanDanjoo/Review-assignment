@@ -1,4 +1,4 @@
-package com.teamsparta.assignment.domain.user.model
+package com.teamsparta.assignment.domain.member.model
 
 import jakarta.persistence.*
 

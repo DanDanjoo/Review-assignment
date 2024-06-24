@@ -1,6 +1,6 @@
-package com.teamsparta.assignment.domain.user.repository
+package com.teamsparta.assignment.domain.member.repository
 
-import com.teamsparta.assignment.domain.user.model.Member
+import com.teamsparta.assignment.domain.member.model.Member
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
