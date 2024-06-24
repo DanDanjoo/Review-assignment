@@ -1,7 +1,12 @@
 package com.teamsparta.assignment.domain.post.controller
 
+import com.teamsparta.assignment.domain.post.dto.PostResponse
+import com.teamsparta.assignment.domain.post.dto.CreatePostRequest
+import com.teamsparta.assignment.domain.post.dto.UpdatePostRequest
 import com.teamsparta.assignment.domain.post.service.PostService
 import io.swagger.v3.oas.annotations.Operation
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
@@ -13,31 +18,45 @@ class PostController(
 
     @GetMapping
     @Operation(summary = "Post 모두 조회", description = "게시글을 모두 조회합니다.")
-    fun getPostsList() {
-        //TODO
+    fun getPostsList(): ResponseEntity<List<PostResponse>> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(postService.findAll())
     }
 
-    @GetMapping
+    @GetMapping("/{postId}")
     @Operation(summary = "Post Id로 조회", description = "게시글을 조회합니다.")
-    fun getPostById() {
-        //TODO
+    fun getPostById(@PathVariable postId: Long): ResponseEntity<PostResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(postService.findById(postId))
     }
 
     @PostMapping
     @Operation(summary = "Post 생성", description = "게시글을 생성합니다.")
-    fun createPost() {
-        //TODO
+    fun createPost(@RequestBody request: CreatePostRequest): ResponseEntity<PostResponse> {
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(postService.create(request))
+
     }
 
-    @PutMapping
+    @PutMapping("/{postId}")
     @Operation(summary = "Post 수정", description = "게시글을 수정합니다.")
-    fun updatePost() {
-        //TODO
+    fun updatePost(@PathVariable postId: Long, request : UpdatePostRequest): ResponseEntity<PostResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(postService.update(postId, request))
+
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{postId}")
     @Operation(summary = "Post 삭제", description = "게시글을 삭제합니다.")
-    fun deletePost() {
-        //TODO
+    fun deletePost(@PathVariable postId: Long): ResponseEntity<Unit> {
+        postService.delete(postId)
+        return ResponseEntity
+            .status(HttpStatus.NO_CONTENT)
+            .body(null)
+
     }
 }
