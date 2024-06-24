@@ -18,7 +18,7 @@ class Post (
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    val author: Member,
+    val member : Member,
 
     @Column(name = "created_at")
     val createdAt: LocalDateTime = LocalDateTime.now(),
@@ -40,7 +40,7 @@ class Post (
     }
 
     fun checkAuthorization(requestMember : Member) {
-        if(requestMember.id != author.id) {
+        if(requestMember.id != member.id) {
             throw Exception("not permitted")
 
         }
