@@ -1,6 +1,7 @@
 package com.teamsparta.assignment.domain.exception
 
 import com.teamsparta.assignment.domain.exception.dto.ErrorResponse
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -48,6 +49,16 @@ class GlobalExceptionHandler {
     @ExceptionHandler(ModelNotFoundException::class)
     fun handleModelNotFoundException(ex: ModelNotFoundException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(message = ex.message))
+    }
+
+    @ExceptionHandler(PostInvariantException.InvalidTitleException::class)
+    fun handleInvalidTitleException(ex: PostInvariantException.InvalidTitleException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
+    }
+
+    @ExceptionHandler(PostInvariantException.InvalidContentException::class)
+    fun handleInvalidContentException(ex: PostInvariantException.InvalidContentException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
     }
 
 }

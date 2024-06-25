@@ -40,9 +40,12 @@ class PostService (
     @Transactional
     fun create(request: CreatePostRequest, userPrincipal: UserPrincipal) : PostResponse {
 
+        val (title, description) = request
+
         val member = memberRepository.findByIdOrNull(userPrincipal.id) ?: throw ModelNotFoundException("User", userPrincipal.id)
 
-        val post = Post(request.title, request.description, member)
+        val post = Post.of(
+            request.title, request.description, member)
 
         val createdPost = postRepository.save(post)
 
@@ -53,11 +56,13 @@ class PostService (
     @Transactional
     fun update(postId: Long, request: UpdatePostRequest, member: Member): PostResponse {
 
+        val (title, description) = request
+
         val foundPost = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("Post", postId)
 
         foundPost.checkAuthorization(member)
 
-        foundPost.updatePostField(request)
+        foundPost.updatePostField(title, description)
 
         // 수정 요청 아이디와 foundPost 아이디가 같은지 확인
 

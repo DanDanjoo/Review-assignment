@@ -1,5 +1,6 @@
 package com.teamsparta.assignment.domain.post.model
 
+import com.teamsparta.assignment.domain.exception.PostInvariantException
 import com.teamsparta.assignment.domain.member.model.Member
 import com.teamsparta.assignment.domain.post.comment.model.Comment
 import com.teamsparta.assignment.domain.post.dto.UpdatePostRequest
@@ -44,9 +45,46 @@ class Post (
         }
     }
 
-    fun updatePostField(request: UpdatePostRequest) {
-        title = request.title
-        description = request.description
+    fun updatePostField(title: String, description: String) {
+        validateTitleLength(title)
+        validateDescription(description)
+
+        this.title = title
+        this.description = description
+        this.updatedAt = LocalDateTime.now()
 
     }
-}
+
+    companion object {
+
+        private fun validateTitleLength(title: String) {
+            if (title.isEmpty() || title.length > 500) {
+                throw PostInvariantException.InvalidTitleException()
+            }
+        }
+
+        private fun validateDescription(description: String) {
+            if (description.isEmpty() || description.length > 5000) {
+                throw PostInvariantException.InvalidContentException()
+            }
+        }
+
+
+        fun of(title: String, description: String, member: Member) : Post {
+            validateTitleLength(title)
+            validateDescription(description)
+
+            val timestamp = LocalDateTime.now()
+
+            return Post(
+                title = title,
+                description = description,
+                member = member,
+                createdAt = timestamp,
+                updatedAt = timestamp
+            )
+        }
+
+        }
+    }
+
