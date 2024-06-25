@@ -1,6 +1,7 @@
 package com.teamsparta.assignment.domain.post.comment.model
 
 import com.teamsparta.assignment.domain.member.model.Member
+import com.teamsparta.assignment.domain.post.comment.dto.UpdateCommentRequest
 import com.teamsparta.assignment.domain.post.model.Post
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -27,7 +28,18 @@ class Comment (
     var updatedAt: LocalDateTime = LocalDateTime.now(),
 
     ){
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
+
+    fun checkAuthorization(requestMember: Member) {
+        if(requestMember.id != member.id){
+            throw Exception("not permitted")
+        }
+    }
+
+    fun updateCommentField(request: UpdateCommentRequest) {
+        content = request.content
+    }
 }

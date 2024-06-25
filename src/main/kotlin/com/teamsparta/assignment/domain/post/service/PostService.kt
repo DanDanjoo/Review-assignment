@@ -36,6 +36,7 @@ class PostService (
 
     }
 
+    @Transactional
     fun create(request: CreatePostRequest, userPrincipal: UserPrincipal) : PostResponse {
 
         val member = memberRepository.findByIdOrNull(userPrincipal.id) ?: throw ModelNotFoundException("User", userPrincipal.id)
@@ -62,6 +63,7 @@ class PostService (
         return PostResponse.from(foundPost)
     }
 
+    @Transactional
     fun delete(postId: Long, userPrincipal: UserPrincipal) {
 
         val foundPost = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("Post", postId)

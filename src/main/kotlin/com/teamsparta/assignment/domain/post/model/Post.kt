@@ -33,16 +33,16 @@ class Post (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
 
-    fun updatePostField(request: UpdatePostRequest) {
-        title = request.title
-        description = request.description
-
-    }
-
     fun checkAuthorization(requestMember : Member) {
         if(requestMember.id != member.id) {
             throw Exception("not permitted")
 
         }
+    }
+
+    fun updatePostField(request: UpdatePostRequest) {
+        title = request.title
+        description = request.description
+
     }
 }

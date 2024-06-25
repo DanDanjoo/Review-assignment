@@ -1,9 +1,11 @@
 package com.teamsparta.assignment.domain.post.comment.service
 
 import com.teamsparta.assignment.domain.exception.ModelNotFoundException
+import com.teamsparta.assignment.domain.member.model.Member
 import com.teamsparta.assignment.domain.member.repository.MemberRepository
 import com.teamsparta.assignment.domain.post.comment.dto.CommentResponse
 import com.teamsparta.assignment.domain.post.comment.dto.CreateCommentRequest
+import com.teamsparta.assignment.domain.post.comment.dto.UpdateCommentRequest
 import com.teamsparta.assignment.domain.post.comment.model.Comment
 import com.teamsparta.assignment.domain.post.comment.repository.CommentRepository
 import com.teamsparta.assignment.domain.post.repository.PostRepository
@@ -37,5 +39,31 @@ class CommentService (
         val savedComment = commentRepository.save(comment)
 
         return CommentResponse.from(savedComment)
+    }
+
+    @Transactional
+    fun update(postId: Long, commentId: Long, request: UpdateCommentRequest, member: Member): CommentResponse {
+
+        val foundPost = commentRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("Post", postId)
+
+        val foundComment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("Comment", commentId)
+
+        foundComment.checkAuthorization(member)
+
+        foundComment.updateCommentField(request)
+
+        return CommentResponse.from(foundComment)
+    }
+
+    @Transactional
+    fun delete(postId: Long, commentId: Long, userPrincipal: UserPrincipal) {
+
+        val foundPost = commentRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("Post", postId)
+
+        val foundComment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("Comment", commentId)
+
+        foundComment.checkAuthorization(userPrincipal.to())
+
+        commentRepository.deleteById(postId)
     }
 }

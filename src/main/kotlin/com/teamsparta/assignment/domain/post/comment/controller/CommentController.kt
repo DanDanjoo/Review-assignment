@@ -2,6 +2,7 @@ package com.teamsparta.assignment.domain.post.comment.controller
 
 import com.teamsparta.assignment.domain.post.comment.dto.CommentResponse
 import com.teamsparta.assignment.domain.post.comment.dto.CreateCommentRequest
+import com.teamsparta.assignment.domain.post.comment.dto.UpdateCommentRequest
 import com.teamsparta.assignment.domain.post.comment.service.CommentService
 import com.teamsparta.assignment.infra.security.dto.UserPrincipal
 import io.swagger.v3.oas.annotations.Operation
@@ -27,5 +28,34 @@ class CommentController (
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(commentService.create(postId, request, authentication.principal as UserPrincipal))
+    }
+
+    @PutMapping("/{commentId}")
+    @Operation(summary = "Comment 수정", description = "댓글을 수정합니다.")
+    fun updateComment(
+        @RequestBody request: UpdateCommentRequest,
+        @PathVariable postId: Long,
+        @PathVariable commentId: Long,
+        authentication: Authentication
+    ): ResponseEntity<CommentResponse> {
+
+        val userPrincipal = authentication.principal as UserPrincipal
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(commentService.update(postId, commentId, request, userPrincipal.to()))
+    }
+
+    @DeleteMapping("/{commentId}")
+    @Operation(summary = "Comment 삭제", description = "댓글을 삭제합니다.")
+    fun deleteComment(
+        @PathVariable postId: Long,
+        @PathVariable commentId: Long,
+        authentication: Authentication
+    ): ResponseEntity<Unit> {
+        commentService.delete(postId, commentId, authentication.principal as UserPrincipal)
+        return ResponseEntity
+            .status(HttpStatus.NO_CONTENT)
+            .body(null)
     }
 }
