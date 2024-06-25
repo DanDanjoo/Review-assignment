@@ -5,6 +5,7 @@ import com.teamsparta.assignment.domain.member.model.Member
 import com.teamsparta.assignment.domain.member.repository.MemberRepository
 import com.teamsparta.assignment.domain.post.dto.CreatePostRequest
 import com.teamsparta.assignment.domain.post.dto.PostResponse
+import com.teamsparta.assignment.domain.post.dto.RetrievePostResponse
 import com.teamsparta.assignment.domain.post.dto.UpdatePostRequest
 import com.teamsparta.assignment.domain.post.model.Post
 import com.teamsparta.assignment.domain.post.repository.PostRepository
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class PostService (
     private val memberRepository: MemberRepository,
-    private val postRepository : PostRepository
+    private val postRepository : PostRepository,
 ) {
 
     fun findAll() : List<PostResponse> {
@@ -28,11 +29,11 @@ class PostService (
 
     }
 
-    fun findById(postId: Long): PostResponse {
+    fun findById(postId: Long): RetrievePostResponse {
 
        val foundPost = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("Post", postId)
 
-       return PostResponse.from(foundPost)
+       return RetrievePostResponse.from(foundPost)
 
     }
 

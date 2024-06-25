@@ -2,6 +2,7 @@ package com.teamsparta.assignment.domain.post.controller
 
 import com.teamsparta.assignment.domain.post.dto.PostResponse
 import com.teamsparta.assignment.domain.post.dto.CreatePostRequest
+import com.teamsparta.assignment.domain.post.dto.RetrievePostResponse
 import com.teamsparta.assignment.domain.post.dto.UpdatePostRequest
 import com.teamsparta.assignment.domain.post.service.PostService
 import com.teamsparta.assignment.infra.security.dto.UserPrincipal
@@ -28,7 +29,7 @@ class PostController(
 
     @GetMapping("/{postId}")
     @Operation(summary = "Post Id로 조회", description = "게시글을 조회합니다.")
-    fun getPostById(@PathVariable postId: Long): ResponseEntity<PostResponse> {
+    fun getPostById(@PathVariable postId: Long): ResponseEntity<RetrievePostResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(postService.findById(postId))

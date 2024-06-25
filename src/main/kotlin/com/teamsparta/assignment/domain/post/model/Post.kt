@@ -1,6 +1,7 @@
 package com.teamsparta.assignment.domain.post.model
 
 import com.teamsparta.assignment.domain.member.model.Member
+import com.teamsparta.assignment.domain.post.comment.model.Comment
 import com.teamsparta.assignment.domain.post.dto.UpdatePostRequest
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -28,10 +29,13 @@ class Post (
 
 ) {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
+    val comments : List<Comment> = emptyList()
+
 
     fun checkAuthorization(requestMember : Member) {
         if(requestMember.id != member.id) {
