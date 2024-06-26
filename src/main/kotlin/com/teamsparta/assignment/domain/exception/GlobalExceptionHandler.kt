@@ -10,39 +10,49 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
-    @ExceptionHandler(NicknameValidationException.NicknameDuplicateException::class)
-    fun handleNicknameDuplicateException(ex: NicknameValidationException.NicknameDuplicateException
-    ): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(NicknameDuplicateException::class)
+    fun handleNicknameDuplicateException(ex: NicknameDuplicateException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponse(message = ex.message))
     }
 
-    @ExceptionHandler(NicknameValidationException.NicknameInvalidException::class)
-    fun handleNicknameInvalidException(ex: NicknameValidationException.NicknameInvalidException
-    ): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(NicknameInvalidException::class)
+    fun handleNicknameInvalidException(ex: NicknameInvalidException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
     }
 
-    @ExceptionHandler(PasswordValidationException.PasswordMismatchException::class)
-    fun handlePasswordMismatchException(ex: PasswordValidationException.PasswordMismatchException
-    ): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(PasswordMismatchException::class)
+    fun handlePasswordMismatchException(ex: PasswordMismatchException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
     }
 
-    @ExceptionHandler(PasswordValidationException.PasswordLengthException::class)
-    fun handlePasswordLengthException(ex: PasswordValidationException.PasswordLengthException
-    ): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(PasswordLengthException::class)
+    fun handlePasswordLengthException(ex: PasswordLengthException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
     }
 
-    @ExceptionHandler(PasswordValidationException.PasswordContainsNicknameException::class)
-    fun handlePasswordContainsNicknameException(ex: PasswordValidationException.PasswordContainsNicknameException
-    ): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(PasswordContainsNicknameException::class)
+    fun handlePasswordContainsNicknameException(ex: PasswordContainsNicknameException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
     }
 
     @ExceptionHandler(LoginValidationException::class)
     fun handleLoginValidationException(ex: LoginValidationException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse(message = ex.message))
+    }
+
+    @ExceptionHandler(ModelNotFoundException::class)
+    fun handleModelNotFoundException(ex: ModelNotFoundException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(message = ex.message))
+    }
+
+    @ExceptionHandler(InvalidTitleException::class)
+    fun handleInvalidTitleException(ex: InvalidTitleException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
+    }
+
+    @ExceptionHandler(InvalidContentException::class)
+    fun handleInvalidContentException(ex: InvalidContentException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(message = ex.message))
     }
 
 }
