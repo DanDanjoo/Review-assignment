@@ -1,9 +1,9 @@
 package com.teamsparta.assignment.domain.post.model
 
-import com.teamsparta.assignment.domain.exception.PostInvariantException
+import com.teamsparta.assignment.domain.exception.InvalidContentException
+import com.teamsparta.assignment.domain.exception.InvalidTitleException
 import com.teamsparta.assignment.domain.member.model.Member
 import com.teamsparta.assignment.domain.post.comment.model.Comment
-import com.teamsparta.assignment.domain.post.dto.UpdatePostRequest
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -59,13 +59,13 @@ class Post (
 
         private fun validateTitleLength(title: String) {
             if (title.isEmpty() || title.length > 500) {
-                throw PostInvariantException.InvalidTitleException()
+                throw InvalidTitleException()
             }
         }
 
         private fun validateDescription(description: String) {
             if (description.isEmpty() || description.length > 5000) {
-                throw PostInvariantException.InvalidContentException()
+                throw InvalidContentException()
             }
         }
 
