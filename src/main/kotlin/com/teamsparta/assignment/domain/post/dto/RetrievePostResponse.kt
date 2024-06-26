@@ -8,7 +8,6 @@ data class RetrievePostResponse (
     val description : String,
     val comment : List<CommentResponse>
 ) {
-
     companion object {
 
         fun from(posts : Post) : RetrievePostResponse {

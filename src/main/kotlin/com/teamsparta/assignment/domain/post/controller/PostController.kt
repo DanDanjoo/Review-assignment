@@ -13,21 +13,25 @@ import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 
 
+
 @RestController
 @RequestMapping("/api/v1/posts")
 class PostController(
     private val postService: PostService
 ) {
 
-    @GetMapping
+    @GetMapping("/getPostsList")
     @Operation(summary = "Post 모두 조회", description = "게시글을 모두 조회합니다.")
-    fun getPostsList(): ResponseEntity<List<PostResponse>> {
+    fun getPostsList(
+        @RequestParam sort : String?,
+        @RequestParam nickname : String?,
+    ): ResponseEntity<List<PostResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.findAll())
+            .body(postService.findAll(sort, nickname))
     }
 
-    @GetMapping("/{postId}")
+    @GetMapping("/{postId}/getPostById")
     @Operation(summary = "Post Id로 조회", description = "게시글을 조회합니다.")
     fun getPostById(@PathVariable postId: Long): ResponseEntity<RetrievePostResponse> {
         return ResponseEntity

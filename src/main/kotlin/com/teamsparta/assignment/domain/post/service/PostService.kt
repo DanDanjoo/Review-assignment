@@ -21,11 +21,17 @@ class PostService (
     private val postRepository : PostRepository,
 ) {
 
-    fun findAll() : List<PostResponse> {
+    fun findAll(sort: String?, nickname: String?) : List<PostResponse> {
 
-        val foundAllPosts = postRepository.findAllByOrderByCreatedAtDesc()
+        return if(sort == "desc"){
 
-        return foundAllPosts.map { PostResponse.from(it)}
+            postRepository.findAllByOrderByCreatedAtDesc()
+
+        } else {
+
+            postRepository.findAllByOrderByCreatedAtAsc()
+
+        } .map { PostResponse.from(it)}
 
     }
 
