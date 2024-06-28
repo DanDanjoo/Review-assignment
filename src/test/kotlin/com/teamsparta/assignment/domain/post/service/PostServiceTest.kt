@@ -1,9 +1,14 @@
 package com.teamsparta.assignment.domain.post.service
 
+import com.teamsparta.assignment.domain.exception.ModelNotFoundException
 import com.teamsparta.assignment.domain.member.model.Member
 import com.teamsparta.assignment.domain.member.repository.MemberRepository
+import com.teamsparta.assignment.domain.post.dto.CreatePostRequest
+import com.teamsparta.assignment.domain.post.dto.UpdatePostRequest
 import com.teamsparta.assignment.domain.post.model.Post
 import com.teamsparta.assignment.domain.post.repository.PostRepository
+import com.teamsparta.assignment.infra.security.dto.UserPrincipal
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -34,6 +39,9 @@ class PostServiceTest : BehaviorSpec({
     every { memberRepository.findByIdOrNull(1L) } returns savedMember
     every { memberRepository.findByIdOrNull(100L) } returns null
 
+    every { postRepository.save(any()) } returns savedPost
+
+    val postService = PostService(memberRepository, postRepository)
 
     Given("저장된 게시물 ID가 1일 경우") {
         val targetPostId = 1L
@@ -71,4 +79,67 @@ class PostServiceTest : BehaviorSpec({
             result shouldNotBe savedMember
         }
     }
+
+    Given("게시물을 생성할 경우") {
+        val request = CreatePostRequest("title", "description")
+        val userPrincipal = UserPrincipal(1L, "my nickname")
+        When("create 메서드가 호출할 시") {
+            val result = postService.create(request, userPrincipal)
+            Then("PostResponse를 반환") {
+                result.title shouldBe request.title
+                result.description shouldBe request.description
+            }
+        }
+
+        When("만약 유효하지 않은 사용자가 게시물을 생성할 경우") {
+            every { memberRepository.findByIdOrNull(userPrincipal.id) } returns null
+            Then("ModelNotFoundException을 던진다.")
+                shouldThrow<ModelNotFoundException> {
+                    postService.create(request, userPrincipal)
+                }
+         }
+    }
+
+    Given("게시물을 수정할 경우") {
+        val request = UpdatePostRequest("title", "description")
+        val member = savedMember
+
+        When("update 메서드가 호출할 시") {
+            every { postRepository.findByIdOrNull(1L) } returns savedPost
+            val result = postService.update(1L, request, member)
+            Then("PostResponse를 반환")
+            result.title shouldBe request.title
+            result.description shouldBe request.description
+        }
+
+        When("만약 존재하지 않는 게시물을 수정하려고 할 경우") {
+            every { postRepository.findByIdOrNull(100L) } returns null
+            Then("ModelNotFoundException을 던진다.") {
+                shouldThrow<ModelNotFoundException> {
+                    postService.update(100L, request, member)
+                }
+            }
+        }
+    }
+
+    Given ("게시물을 삭제할 경우") {
+        val userPrincipal = UserPrincipal(1L, "my nickname")
+
+        When("delete 메서드가 호출할 시") {
+            every { postRepository.findByIdOrNull(1L) } returns savedPost
+            every { postRepository.deleteById(1L) } returns Unit
+            postService.delete(1L, userPrincipal)
+            Then("예외를 던지지 않아도 괜찮음")
+        }
+
+        When("만약 존재하지 않는 게시물을 삭제하려고 할 경우") {
+            every { postRepository.findByIdOrNull(100L) } returns null
+            Then("ModelNotFoundException을 던진다.") {
+                shouldThrow<ModelNotFoundException> {
+                    postService.delete(100L, userPrincipal)
+                }
+            }
+        }
+    }
+
 })
