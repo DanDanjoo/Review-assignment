@@ -1,4 +1,4 @@
-package com.teamsparta.assignment.domain.user.dto
+package com.teamsparta.assignment.domain.member.dto
 
 data class MemberSignupRequest (
     val nickname: String,
