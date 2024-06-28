@@ -5,6 +5,8 @@ plugins {
     kotlin("plugin.spring") version "1.9.24"
     kotlin("plugin.noarg") version "1.9.24"
     kotlin("plugin.allopen") version "1.9.24"
+    kotlin("kapt") version "1.8.22"
+
 }
 
 group = "com.teamsparta"
@@ -26,6 +28,9 @@ repositories {
     mavenCentral()
 }
 
+val kotestVersion = "5.5.5"
+val mockkVersion = "1.13.8"
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -34,6 +39,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("io.jsonwebtoken:jjwt:0.12.3")
+
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("org.postgresql:postgresql")
 
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
@@ -65,6 +76,6 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
-tasks.withType<Test> {
+tasks.withType<Test>().configureEach() {
     useJUnitPlatform()
 }

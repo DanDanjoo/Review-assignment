@@ -3,7 +3,8 @@ package com.teamsparta.assignment.domain.post.dto
 import com.teamsparta.assignment.domain.post.comment.dto.CommentResponse
 import com.teamsparta.assignment.domain.post.model.Post
 
-data class RetrievePostResponse (
+data class  RetrievePostResponse (
+    val id : Long?,
     val title : String,
     val description : String,
     val comment : List<CommentResponse>
@@ -12,6 +13,7 @@ data class RetrievePostResponse (
 
         fun from(posts : Post) : RetrievePostResponse {
             return RetrievePostResponse (
+                posts.id,
                 posts.title,
                 posts.description,
                 posts.comments.map { CommentResponse.from(it) }

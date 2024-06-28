@@ -34,9 +34,13 @@ class PostController(
     @GetMapping("/{postId}/getPostById")
     @Operation(summary = "Post Id로 조회", description = "게시글을 조회합니다.")
     fun getPostById(@PathVariable postId: Long): ResponseEntity<RetrievePostResponse> {
+       val post = postService.findById(postId)
+           ?: return ResponseEntity
+               .status(HttpStatus.NOT_FOUND)
+               .body(null)
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.findById(postId))
+            .body(post)
     }
 
     @PostMapping
