@@ -26,21 +26,21 @@ class PostControllerTest : BehaviorSpec({
 
     every { postService.findById(notSavedPostId) } returns null
 
-    Given("saved post id"){
+    Given("저장된 게시물 ID가 주어졌을 경우"){
         val targetPostId = savedPostId
-        When("findPostId"){
+        When("해당 ID로 게시물을 조회하면"){
             val result = postController.getPostById(targetPostId)
-            Then("status code should be ok") {
+            Then("상태 코드는 OK") {
                 result.statusCode shouldBe HttpStatus.OK
                 result.body?.id shouldBe savedPostId
             }
         }
     }
-    Given("not saved post id"){
+    Given("저장되지 않은 게시물 ID가 주어졌을 경우"){
         val targetPostId = notSavedPostId
-        When("findPostId"){
+        When("해당 ID로 게시물을 조회하면"){
             val result = postController.getPostById(targetPostId)
-            Then("status code should be not found") {
+            Then("상태 코드는 NOT FOUND") {
                 result.statusCode shouldBe HttpStatus.NOT_FOUND
                 result.body shouldBe null
             }
