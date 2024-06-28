@@ -35,7 +35,6 @@ class PostTest : BehaviorSpec({
         val title = ""
         val description = "description"
         val member = Member(1L, "my nickname", "my password")
-
         When("게시물 생성자를 호출할 시") {
             Then("InvalidTitleException이 발생해야 한다.") {
                 shouldThrow<InvalidTitleException> {
@@ -62,7 +61,6 @@ class PostTest : BehaviorSpec({
         val title = "title"
         val description = ""
         val member = Member(1L, "my nickname", "my password")
-
         When("게시물 생성자를 호출할 시") {
             Then("InvalidContentException이 발생해야 한다.") {
                 shouldThrow<InvalidContentException> {
@@ -76,7 +74,6 @@ class PostTest : BehaviorSpec({
         val title = "title"
         val description = "a".repeat(5001)
         val member = Member(1L, "my nickname", "my password")
-
         When("게시물의 생설자를 호출할 시") {
             Then("InvalidContentException이 발생해야 한다.") {
                 shouldThrow<InvalidContentException> {

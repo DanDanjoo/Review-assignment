@@ -37,23 +37,18 @@ class PostServiceTest : BehaviorSpec({
 
     Given("저장된 게시물 ID가 1일 경우") {
         val targetPostId = 1L
-
         When("postRepository findByIdOrNull 호출할 시") {
             val result = postRepository.findByIdOrNull(targetPostId)
-
             Then("null이 아니어야 한다.") {
                 result shouldBe savedPost
-
                 }
             }
         }
 
     Given("저장된 게시물 ID가 100일 경우") {
         val targetPostId = 100L
-
         When("postRepository findByIdOrNull 호출할 시") {
             val result = postRepository.findByIdOrNull(targetPostId)
-
             Then("null이 나와야 한다.")
             result shouldNotBe savedPost
         }
@@ -61,10 +56,8 @@ class PostServiceTest : BehaviorSpec({
 
     Given("저장된 멤버 ID가 1일 경우") {
         val targetMemberId = 1L
-
         When("memberRepository findByIdOrNull 호출할 시") {
             val result = memberRepository.findByIdOrNull(targetMemberId)
-
             Then("null이 아니어야 한다.")
             result shouldBe savedMember
         }
@@ -72,10 +65,8 @@ class PostServiceTest : BehaviorSpec({
 
     Given("저장되지 않는 멤버 ID가 100일 경우") {
         val targetMemberId = 100L
-
         When("memberRepository findByIdOrNull 호출할 시") {
             val result = memberRepository.findByIdOrNull(targetMemberId)
-
             Then("null이 나와야 한다.")
             result shouldNotBe savedMember
         }
