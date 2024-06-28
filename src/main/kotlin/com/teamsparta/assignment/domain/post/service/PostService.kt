@@ -35,7 +35,7 @@ class PostService (
 
     }
 
-    fun findById(postId: Long): RetrievePostResponse {
+    fun findById(postId: Long): RetrievePostResponse? {
 
        val foundPost = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("Post", postId)
 
