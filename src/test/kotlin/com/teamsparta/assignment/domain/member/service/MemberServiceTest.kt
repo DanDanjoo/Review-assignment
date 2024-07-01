@@ -2,6 +2,7 @@ package com.teamsparta.assignment.domain.member.service
 
 import com.teamsparta.assignment.domain.exception.LoginValidationException
 import com.teamsparta.assignment.domain.exception.NicknameDuplicateException
+import com.teamsparta.assignment.domain.exception.NicknameInvalidException
 import com.teamsparta.assignment.domain.exception.PasswordMismatchException
 import com.teamsparta.assignment.domain.member.dto.MemberLoginRequest
 import com.teamsparta.assignment.domain.member.dto.MemberSignupRequest
@@ -64,49 +65,89 @@ class MemberServiceTest : BehaviorSpec({
                 }
             }
         }
-    }
 
-    Given("로그인 요청이 들어왔을 경우") {
+        When("닉네임이 최소 3자 이상 10자 이하가 아닐 시") {
+            val invalidNicknameRequests = listOf(
+                MemberSignupRequest(
+                    nickname = "na",
+                    password = "validPassword",
+                    passwordConfirmation = "validPassword"
+                ),
+                MemberSignupRequest(
+                    nickname = "tooLongNickname",
+                    password = "validPassword",
+                    passwordConfirmation = "validPassword"
+                )
+            )
 
-        val request = MemberLoginRequest(
-            nickname = "validNickname",
-            password = "validPassword"
-        )
-
-        val member = Member(
-            id = 1L,
-            nickname = request.nickname,
-            password = "encodedPassword"
-        )
-
-        When("유효한 요청이 주어졌을 시") {
-            every { memberRepository.findByNickname(request.nickname) } returns member
-            every { passwordEncoder.matches(request.password, member.password) } returns true
-            every { jwtPlugin.generateAccessToken(any(), any()) } returns "jwtToken"
-            val result = memberService.logIn(request)
-            Then("로그인 성공") {
-                result.nickname shouldBe request.nickname
-                result.token shouldBe "jwtToken"
-            }
-        }
-
-        When("닉네임이 존재하지 않을 시") {
-            every { memberRepository.findByNickname(request.nickname) } returns null
-            Then("LoginValidationException이 발생해야 한다.") {
-                shouldThrow<LoginValidationException> {
-                    memberService.logIn(request)
+            invalidNicknameRequests.forEach { request ->
+                Then("NicknameInvalidException이 발생해야 한다. 닉네임: ${request.nickname}") {
+                    shouldThrow<NicknameInvalidException> {
+                        memberService.signUp(request)
+                    }
                 }
-            }
-        }
 
-        When("비밀번호가 일치하지 않을 시") {
-            every { memberRepository.findByNickname(request.nickname) } returns member
-            every { passwordEncoder.matches(request.password, member.password) } returns false
-            Then("LoginValidationException이 발생해야 한다.") {
-                shouldThrow<LoginValidationException> {
-                    memberService.logIn(request)
+
+                When("닉네임에 알파벳 대소문자 또는 숫자가 포함되지 않을 경우") {
+                    val invalidCharNicknameRequest = MemberSignupRequest(
+                        nickname = "!!!",
+                        password = "validPassword",
+                        passwordConfirmation = "validPassword"
+                    )
+
+                    Then("NicknameInvalidException이 발생해야 한다.") {
+                        shouldThrow<NicknameInvalidException> {
+                            memberService.signUp(invalidCharNicknameRequest)
+                        }
+                    }
                 }
             }
         }
     }
+
+        Given("로그인 요청이 들어왔을 경우") {
+
+            val request = MemberLoginRequest(
+                nickname = "validNickname",
+                password = "validPassword"
+            )
+
+            val member = Member(
+                id = 1L,
+                nickname = request.nickname,
+                password = "encodedPassword"
+            )
+
+            When("유효한 요청이 주어졌을 시") {
+                every { memberRepository.findByNickname(request.nickname) } returns member
+                every { passwordEncoder.matches(request.password, member.password) } returns true
+                every { jwtPlugin.generateAccessToken(any(), any()) } returns "jwtToken"
+                val result = memberService.logIn(request)
+                Then("로그인 성공") {
+                    result.nickname shouldBe request.nickname
+                    result.token shouldBe "jwtToken"
+                }
+            }
+
+            When("닉네임이 존재하지 않을 시") {
+                every { memberRepository.findByNickname(request.nickname) } returns null
+                Then("LoginValidationException이 발생해야 한다.") {
+                    shouldThrow<LoginValidationException> {
+                        memberService.logIn(request)
+                    }
+                }
+            }
+
+            When("비밀번호가 일치하지 않을 시") {
+                every { memberRepository.findByNickname(request.nickname) } returns member
+                every { passwordEncoder.matches(request.password, member.password) } returns false
+                Then("LoginValidationException이 발생해야 한다.") {
+                    shouldThrow<LoginValidationException> {
+                        memberService.logIn(request)
+                    }
+                }
+            }
+        }
+
+
 })
